@@ -54,7 +54,11 @@ Handwritten-Digit-Classification-using-KNN/
   + matplotlib
 ### Cài đặt
 1. Clone hoặc tải về mã nguồn của dự án.
-2. Cài đặt các thư viện cần thiết bằng lệnh:
+```
+git clone https://github.com/ntinh1704/Handwritten-Digit-Classification-using-KNN
+cd Handwritten-Digit-Classification-using-KNN
+```
+3. Cài đặt các thư viện cần thiết bằng lệnh:
 ```
 pip install numpy opencv-python matplotlib
 ```
