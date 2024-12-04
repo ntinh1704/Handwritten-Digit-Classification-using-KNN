@@ -58,11 +58,11 @@ Handwritten-Digit-Classification-using-KNN/
 git clone https://github.com/ntinh1704/Handwritten-Digit-Classification-using-KNN
 cd Handwritten-Digit-Classification-using-KNN
 ```
-3. Cài đặt các thư viện cần thiết bằng lệnh:
+2. Cài đặt các thư viện cần thiết bằng lệnh:
 ```
 pip install numpy opencv-python matplotlib
 ```
-3. Đảm bảo có các thư mục sau:
+3. Tải và giải nén file dataset.rar để đảm bảo có các thư mục sau:
 - dataset/training
 - dataset/testing
 - pred_input
