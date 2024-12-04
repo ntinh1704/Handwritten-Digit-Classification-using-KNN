@@ -1,1 +1,2 @@
 # Handwritten-Digit-Classification-using-KNN
+Kho lưu trữ này giới thiệu dự án "Handwritten-Digit-Classification" của tôi sử dụng Bộ dữ liệu MNIST. Dự án này được triển khai và thực hiện bằng cách áp dụng thuật toán KNN với độ chính xác nhận dạng khoảng 91-93%. Kết quả mong muốn đã thu được bằng cách đào tạo máy đầu tiên bằng bộ dữ liệu mnist_train và sau đó kiểm tra kết quả thu được bằng bộ dữ liệu mnist_test để nhận dạng chữ số viết tay.
