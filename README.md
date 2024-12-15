@@ -44,7 +44,7 @@ Handwritten-Digit-Classification-using-KNN/
 5. Tính Recall và F1-Score cho từng lớp nhãn.
 6. Tìm giá trị K tối ưu bằng phương pháp Elbow Method.
 7. Hiển thị cấu hình hiện tại.
-8. Tính Confusion MatrixMatrix
+8. Tính Confusion Matrix.
 
 ## Hướng dẫn cài đặt
 ### Yêu cầu hệ thống
@@ -90,7 +90,7 @@ Chọn các thao tác từ menu hiển thị:
 5. Tính toán Recall và F1-Score cho từng nhãn.
 6. Tìm giá trị K tối ưu.
 7. Hiển thị cấu hình hiện tại.
-8. Tính Confusion Matrix
+8. Tính Confusion Matrix.
 9. Thoát ứng dụng.
 
 ## Kết quả
