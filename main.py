@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt # type: ignore
 import os
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 DATA_PATH_TRANNING = 'C:/Users/bravo/Downloads/KNN/dataset/training'
 DATA_PATH_TESTING = 'C:/Users/bravo/Downloads/KNN/dataset/testing'
@@ -76,8 +78,18 @@ def predict():
     file_name = input(f'Nhập tên file (lưu ý tên file phải có trong thư mục pred_input): ')
     file_path = 'pred_input/' + file_name
     image_file = cv2.imread(file_path, 0)
-    image_file = handle_data(image_file)
+    
+    # Xử lý ảnh đầu vào giống như cách xử lý dữ liệu huấn luyện
+    image_file = enhance_images([image_file])[0]  # Chạy qua hàm tiền xử lý
+    _, image_file = cv2.threshold(image_file, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    if np.mean(image_file) > 130:
+        image_file = cv2.bitwise_not(image_file)
+    # Resize ảnh đầu vào về đúng kích thước
+    image_file = cv2.resize(image_file, (28, 28))
+
     image_file = np.array(image_file)
+    
+    # Tải dữ liệu huấn luyện và dự đoán
     labels_train, images_train, labels_test, images_test = load_and_handle()
     pred = predict_label(images_train, labels_train, image_file, k)
     print('Kết quả dự đoán là: ' + str(pred))
@@ -86,7 +98,7 @@ def enhance_images(images):
     """
     Tiền xử lý ảnh bổ sung, bao gồm thay đổi kích thước, lọc nhiễu và cân bằng histogram.
     """
-    processed_images = []
+    processed_images = []   
     for img in images:
         # Thay đổi kích thước ảnh về 28x28 (nếu cần)
         img = cv2.resize(img, (28, 28))
@@ -126,9 +138,9 @@ def load_and_handle():
 
 def setNumberTrainAndTest():
     global number_train, number_test, k
-    num_train = input(f'Nhập số lượng train (nhỏ hơn 5.500)')
+    num_train = input(f'Nhập số lượng train (nhỏ hơn 5.500): ')
     num_train = int(num_train)
-    num_test = input(f'Nhập số lượng test (nhỏ hơn 1.000)')
+    num_test = input(f'Nhập số lượng test (nhỏ hơn 1.000): ')
     num_test = int(num_test)
     number_train = num_train
     number_test = num_test
@@ -136,7 +148,7 @@ def setNumberTrainAndTest():
     
 def setK():
     global number_train, number_test, k
-    new_k = input(f'Nhập K (nhỏ hơn K_max: 244)')
+    new_k = input(f'Nhập K (nhỏ hơn K_max: 244): ')
     new_k = int(new_k)
     k = new_k
     set_config(number_train, number_test, k)
@@ -151,22 +163,8 @@ def cal_accuracy():
             n_correct += 1
     accuracy = n_correct / len(images_test)
     print('Accuracy: %.2f%%' % (accuracy * 100))
-    
-def get_cal_accuracy():
-    global number_train, number_test, k 
-    n_correct = 0
-    labels_train, images_train, labels_test, images_test = load_and_handle()
-    for i in range(len(images_test)):
-        pred = predict_label(images_train, labels_train, images_test[i], k)
-        if pred == labels_test[i]:
-            n_correct += 1
-    accuracy = n_correct / len(images_test)
-    return accuracy
 
 def calculate_recall_and_f1():
-    """
-    Tính toán Recall và F1-Score cho từng lớp nhãn trong tập kiểm tra.
-    """
     global k
     # Tải dữ liệu huấn luyện và kiểm tra
     labels_train, images_train, labels_test, images_test = load_and_handle()
@@ -220,8 +218,6 @@ def calculate_recall_and_f1():
     print(f"\nRecall trung bình: {avg_recall:.2f}")
     print(f"F1-Score trung bình: {avg_f1:.2f}")
  
-
-
 def find_best_k(max_k):
     labels_train, images_train, labels_test, images_test = load_and_handle()
 
@@ -254,21 +250,46 @@ def find_best_k(max_k):
     # In kết quả
     print(f'\nK tối ưu là {best_k} với độ chính xác {max_accuracy:.2f}%.\n')
 
+def save_confusion_matrix():
+    global k
+
+    # Tải dữ liệu huấn luyện và kiểm tra
+    labels_train, images_train, labels_test, images_test = load_and_handle()
+
+    # Khởi tạo danh sách nhãn dự đoán
+    predicted_labels = []
+
+    for i in range(len(images_test)):
+        pred = predict_label(images_train, labels_train, images_test[i], k)
+        predicted_labels.append(pred)
+
+    # Tính confusion matrix
+    cm = confusion_matrix(labels_test, predicted_labels)
+
+    # Vẽ confusion matrix
+    plt.figure(figsize=(12, 10))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=range(10), yticklabels=range(10))
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
+    plt.title('Confusion Matrix')
+
+    # Lưu confusion matrix vào file ảnh
+    plt.savefig("confusion_matrix.png")
+    print("Confusion matrix đã được lưu vào file 'confusion_matrix.png'.")
+
 if __name__ == "__main__":
     load_config()
     while True:
         key = input(
-            f'\nNhập vào thao tác muốn thực hiện: \n1. Thiết lập số lượng train, test. \n2. Thiết lập K. \n3. Dự đoán ảnh. \n4. Tính độ chính xác. \n5. Tính Recall và F1-Score \n6. K tối ưu. \n7. Xem config.\n8. Thoát.\nLựa chọn của bạn: '
+            f'\nNhập vào thao tác muốn thực hiện: \n1. Thiết lập số lượng train, test. \n2. Thiết lập K. \n3. Dự đoán ảnh. \n4. Tính độ chính xác. \n5. Tính Recall và F1-Score \n6. K tối ưu. \n7. Xem config.\n8. Tính Confusion Matrix.\n9. Thoát.\nLựa chọn của bạn: '
         ).strip()
 
-        # Kiểm tra giá trị nhập vào
-        if not key.isdigit():  # Nếu không phải số
-            print("Lựa chọn không hợp lệ! Vui lòng nhập số từ 1 đến 8.")
+        if not key.isdigit():
+            print("Lựa chọn không hợp lệ! Vui lòng nhập số từ 1 đến 9.")
             continue
 
-        key = int(key)  # Chuyển đổi sang số nguyên
+        key = int(key)
 
-        # Xử lý các lựa chọn
         if key == 1:
             setNumberTrainAndTest()
         elif key == 2:
@@ -287,9 +308,11 @@ if __name__ == "__main__":
             print("NUM TEST: " + str(number_test))
             print("K: " + str(k))
         elif key == 8:
+            save_confusion_matrix()
+        elif key == 9:
             print("Thoát ứng dụng...")
             break
         else:
-            print("Lựa chọn không hợp lệ! Vui lòng nhập số từ 1 đến 8.")
+            print("Lựa chọn không hợp lệ! Vui lòng nhập số từ 1 đến 9.")
 
         
