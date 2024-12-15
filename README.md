@@ -5,7 +5,7 @@ Kho lưu trữ này giới thiệu dự án "Handwritten-Digit-Classification" c
 Hệ thống bao gồm các bước cơ bản:
 - Xử lý dữ liệu: Tải và tiền xử lý các ảnh đầu vào.
 - Phân loại bằng KNN: Tìm kiếm K lân cận gần nhất để dự đoán nhãn.
-- Đánh giá: Tính độ chính xác, Recall, F1-Score, và tìm K tối ưu bằng Elbow Method.
+- Đánh giá: Tính ma trận nhầm lẫn (Confusion Matrix), độ chính xác (Accuracy), độ nhạy (Recall), F1-Score và tìm K tối ưu bằng Elbow Method.
 - Cấu hình: Thiết lập số lượng ảnh huấn luyện, kiểm tra và giá trị K.
 - Dự đoán nhãn của ảnh dựa trên dữ liệu huấn luyện.
 
@@ -44,6 +44,7 @@ Handwritten-Digit-Classification-using-KNN/
 5. Tính Recall và F1-Score cho từng lớp nhãn.
 6. Tìm giá trị K tối ưu bằng phương pháp Elbow Method.
 7. Hiển thị cấu hình hiện tại.
+8. Tính Confusion MatrixMatrix
 
 ## Hướng dẫn cài đặt
 ### Yêu cầu hệ thống
@@ -89,7 +90,8 @@ Chọn các thao tác từ menu hiển thị:
 5. Tính toán Recall và F1-Score cho từng nhãn.
 6. Tìm giá trị K tối ưu.
 7. Hiển thị cấu hình hiện tại.
-8. Thoát ứng dụng.
+8. Tính Confusion Matrix
+9. Thoát ứng dụng.
 
 ## Kết quả
 - Độ chính xác: Hiển thị tỷ lệ phần trăm ảnh được phân loại đúng.
